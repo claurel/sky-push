@@ -8,4 +8,8 @@ public func routes(_ app: Application) throws {
     app.get { req -> String in
         "SkyGuidePush backend is running"
     }
+    
+    let deviceController = DeviceController()
+    app.post("devices", "register", use: deviceController.register)
+    app.get("devices", "summary", use: deviceController.summary)
 }

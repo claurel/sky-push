@@ -26,8 +26,8 @@ public func configure(_ app: Application) throws {
         ), as: .psql)
     }
 
-    // Migrations will go here later
-    // e.g. app.migrations.add(CreateDevice())
+    // Register migrations
+    app.migrations.add(CreateDevice())
 
     // Run migrations automatically on startup
     try app.autoMigrate().wait()

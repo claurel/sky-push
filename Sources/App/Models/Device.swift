@@ -63,17 +63,11 @@ struct NotificationTypeOptions: OptionSet, Codable {
     let rawValue: Int
 
     // Example categories — adjust as you define your UX:
-    static let nightlySummary  = NotificationTypeOptions(rawValue: 1 << 0)
-    static let eventAlerts     = NotificationTypeOptions(rawValue: 1 << 1)
-    static let marketing       = NotificationTypeOptions(rawValue: 1 << 2)
-    static let criticalAlerts  = NotificationTypeOptions(rawValue: 1 << 3)
+    static let featuredArticles  = NotificationTypeOptions(rawValue: 1 << 0)
 
     // Helper to subscribe to “everything”
     static let all: NotificationTypeOptions = [
-        .nightlySummary,
-        .eventAlerts,
-        .marketing,
-        .criticalAlerts
+        .featuredArticles,
     ]
 }
 
@@ -95,4 +89,29 @@ extension FieldKey {
     static let tier              = Self("tier")
     static let createdAt         = Self("created_at")
     static let updatedAt         = Self("updated_at")
+}
+
+extension NotificationTypeOptions {
+    /// Map incoming string names to options.
+    static func from(names: [String]) throws -> NotificationTypeOptions {
+        var options: NotificationTypeOptions = []
+
+        for name in names {
+            switch name {
+            case "featuredArticles":
+                options.insert(.featuredArticles)
+            default:
+                throw Abort(.badRequest, reason: "Unknown notification type: \(name)")
+            }
+        }
+
+        return options
+    }
+
+    /// Map bitmask back to string names for responses.
+    var names: [String] {
+        var result: [String] = []
+        if contains(.featuredArticles) { result.append("featuredArticles") }
+        return result
+    }
 }
